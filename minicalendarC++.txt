@@ -1,0 +1,142 @@
+#include <stdio.h>
+
+int isleapyear(int year) {
+  if (year % 400 == 0) {
+    return 1;
+  } else if (year % 100 == 0) {
+    return 0;
+  } else if (year % 4 == 0) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+int startingday(int year) {
+  int day = 3, i;
+  if (year > 2020) {
+    for (i = 2020; i < year; i++) {
+      if (isleapyear(i) == 1)
+        day += 1;
+      day += 1;
+    }
+  } else {
+    for (i = year; i < 2020; i++) {
+      if (isleapyear(i) == 1)
+        day -= 1;
+      day -= 1;
+    }
+  }
+  while (day < 0)
+    day = 7 + day;
+  return (day % 7);
+}
+
+int dayscalculator(int month, int leapyear) {
+  int days, i;
+  int monthsw31days[] = {1,3,5,7,8,10,12};
+  int monthsw30days[] = {4,6,9,11};
+  if (month == 2 && leapyear == 1)
+    days = 29;
+  else if (month == 2)
+    days = 28;
+  for (i = 0; i <= 6; i++) {
+    if (monthsw31days[i] == month) {
+      days = 31;
+      break;
+    }
+  }
+  for (i = 0; i <= 3; i++) {
+    if (monthsw30days[i] == month) {
+      days = 30;
+      break;
+    }
+  }
+  return days;
+
+}
+
+void printmonthname(int month) {
+  if (month == 1)
+    printf("        January       \n");
+  if (month == 2)
+    printf("       February       \n");
+  if (month == 3)
+    printf("         March        \n");
+  if (month == 4)
+    printf("         April        \n");
+  if (month == 5)
+    printf("         May          \n");
+  if (month == 6)
+    printf("         June         \n");
+  if (month == 7)
+    printf("         July         \n");
+  if (month == 8)
+    printf("        August        \n");
+  if (month == 9)
+    printf("       September      \n");
+  if (month == 10)
+    printf("        October       \n");
+  if (month == 11)
+    printf("       November       \n");
+  if (month == 12)
+    printf("       December       \n");
+}
+
+void lines() {
+  printf("----------------------\n");
+}
+
+int printmonth(int year, int month, int leapyear, int startingday) {
+  int noofdays = dayscalculator(month, leapyear);
+  int i, today = 1, ret = (startingday + noofdays) % 7;
+  printmonthname(month);
+  lines();
+  printf("Su Mo Tu We Th Fr Sa\n");
+  lines();
+  for (i = 0; i < startingday; i++)
+    printf("   ");
+  while (today <= noofdays) {
+    for (i = startingday; i < 7; i++) {
+      if (today > noofdays)
+        break;
+      if (today < 10)
+        printf(" %d ", today);
+      else {
+        printf("%d ", today);
+      }
+      today += 1;
+    }
+    startingday = 0;
+    printf("\n");
+  }
+  lines();
+
+  return ret;
+
+}
+
+void printyear(int year) {
+  int i, nxt;
+  int leapyear = isleapyear(year);
+  int startday = startingday(year);
+  for (i = 1; i <= 12; i++) {
+    if (i == 1)
+      nxt = printmonth(year, i, leapyear, startday);
+    else {
+      printf("\n\n");
+      nxt = printmonth(year, i, leapyear, nxt);
+    }
+  }
+
+}
+
+int main() {
+  int year;
+  printf("Enter a year:");
+  scanf("%d", & year);
+  printf("\n\n\n\n\n");
+  printyear(year);
+
+  return 1;
+}
